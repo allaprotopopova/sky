@@ -23,43 +23,37 @@ public class Menu extends FlexLayout {
 
     public Menu() {
         setClassName("menu-bar");
-        setWidth("10%");
-         // header of the menu
+
+        final Button showMenu = new Button("Menu", event -> {
+            if (tabs.getClassNames().contains(SHOW_TABS)) {
+                tabs.removeClassName(SHOW_TABS);
+            } else {
+                tabs.addClassName(SHOW_TABS);
+            }
+        });
+        showMenu.setClassName("menu-button");
+        showMenu.getElement().getThemeList().add("small");
+        showMenu.setIcon(new Icon(VaadinIcon.MENU));
+        add(showMenu);
+
         final HorizontalLayout top = new HorizontalLayout();
         top.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         top.setClassName("menu-header");
-        Label title = new Label("For Cliff");
-        title.setClassName("Available");
+
+        Label title = new Label("Education Tools");
+
         top.add(title);
         add(top);
 
+        // container for the navigation buttons, which are added by addView()
         tabs = new Tabs();
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         setFlexGrow(1, tabs);
         add(tabs);
+
     }
 
-    /**
-     * Add a view to the navigation menu
-     *
-     * @param viewClass
-     *         that has a {@code Route} annotation
-     * @param caption
-     *         view caption in the menu
-     * @param icon
-     *         view icon in the menu
-     */
-    public void addView(Class<? extends Component> viewClass, String caption,
-                        Icon icon) {
-        Tab tab = new Tab();
-        RouterLink routerLink = new RouterLink(null, viewClass);
-        routerLink.setClassName("menu-link");
-        routerLink.add(icon);
-        routerLink.add(new Span(caption));
-        tab.add(routerLink);
-        tabs.add(tab);
-    }
-    public void addView(Class<? extends Component> viewClass, String caption) {
+      public void addView(Class<? extends Component> viewClass, String caption) {
         Tab tab = new Tab();
         RouterLink routerLink = new RouterLink(null, viewClass);
         routerLink.setClassName("menu-link");
