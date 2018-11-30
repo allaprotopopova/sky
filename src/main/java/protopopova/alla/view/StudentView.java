@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -13,10 +14,7 @@ import protopopova.alla.model.Collocation;
 import protopopova.alla.repository.CollocationRepository;
 import protopopova.alla.repository.CollocationRepositoryImpl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Route(value = "student", layout = MyUI.class)
 public class StudentView extends HorizontalLayout {
@@ -25,17 +23,19 @@ public class StudentView extends HorizontalLayout {
     private CollocationRepository repository = new CollocationRepositoryImpl();
     private Button leftChecked;
     private Button rightChecked;
+//    private Map<Collocation, Button> leftMap = new LinkedHashMap<>();/
 
     public StudentView() {
 
-//        Map<Collocation, Button> mainWordList = new HashMap<>();
-//        Map<Collocation, Button> pairWordList = new HashMap<>();
+
 
         List<Collocation> allCollocations = repository.getAll();
 
         Collections.shuffle(allCollocations);
+        List<Collocation> lList = new ArrayList<>(allCollocations);
         ListBox<Collocation> leftList = new ListBox<>();
         Collections.shuffle(allCollocations);
+        List<Collocation> rList = new ArrayList<>(allCollocations);
         ListBox<Collocation> rightList = new ListBox<>();
 
         leftList.setRenderer(new ComponentRenderer<>(coll -> {
@@ -52,16 +52,18 @@ public class StudentView extends HorizontalLayout {
                     } else {
                         rightChecked.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_ERROR);
                         if (leftCollValue.getId() == rightCollValue.getId()) {
-                            left.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                            lList.remove(leftCollValue);
+                            leftList.getDataProvider().refreshAll();
+                            Button btn = (Button) leftList.getItemRenderer().createComponent(leftCollValue);
+                            btn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                            leftList.addComponents(lList.get(lList.size()-1), btn);
                             rightChecked.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-
+                            leftChecked = null;
+                            rightChecked = null;
                         } else {
                             left.addThemeVariants(ButtonVariant.LUMO_ERROR);
                             rightChecked.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                            left.setEnabled(false);
-                            rightChecked.setEnabled(false);
-                            leftChecked = null;
-                            rightChecked = null;
+
 
 
                         }
@@ -70,7 +72,7 @@ public class StudentView extends HorizontalLayout {
             );
             return left;
         }));
-        leftList.setItems(allCollocations);
+        leftList.setDataProvider(new ListDataProvider<Collocation>(lList));
 
 
         rightList.setRenderer(new ComponentRenderer<>(coll -> {
@@ -84,7 +86,7 @@ public class StudentView extends HorizontalLayout {
             });
             return right;
         }));
-        rightList.setItems(allCollocations);
+        rightList.setItems(rList);
 
 
         add(leftList);
