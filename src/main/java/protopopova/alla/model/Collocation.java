@@ -11,6 +11,11 @@ public class Collocation {
         this.pairWord = pairWord;
     }
 
+    public Collocation(String mainWord, String pairWord) {
+        this.mainWord = mainWord;
+        this.pairWord = pairWord;
+    }
+
     public Integer getId() {
         return id;
     }
