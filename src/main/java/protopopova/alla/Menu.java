@@ -50,15 +50,15 @@ public class Menu extends FlexLayout {
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         setFlexGrow(1, tabs);
         add(tabs);
-
     }
 
-      public void addView(Class<? extends Component> viewClass, String caption) {
-        Tab tab = new Tab();
-        RouterLink routerLink = new RouterLink(null, viewClass);
-        routerLink.setClassName("menu-link");
-        routerLink.add(new Span(caption));
-        tab.add(routerLink);
-        tabs.add(tab);
+      public void addView(Class<? extends Component> viewClass, String caption, Icon icon) {
+          Tab tab = new Tab();
+          RouterLink routerLink = new RouterLink(null, viewClass);
+          routerLink.setClassName("menu-link");
+          routerLink.add(icon);
+          routerLink.add(new Span(caption));
+          tab.add(routerLink);
+          tabs.add(tab);
     }
 }

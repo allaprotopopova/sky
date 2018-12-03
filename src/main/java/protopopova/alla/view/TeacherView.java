@@ -10,7 +10,7 @@ import com.vaadin.flow.router.RoutePrefix;
 import protopopova.alla.MyUI;
 
 @Route(value = "teacher", layout = MyUI.class)
-@RouteAlias(value = "")
+@RouteAlias(value = "", layout = MyUI.class)
 public class TeacherView extends HorizontalLayout {
 
     public static final String VIEW_NAME = "Teacher";

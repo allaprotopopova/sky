@@ -2,6 +2,7 @@ package protopopova.alla;
 
 
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RoutePrefix;
@@ -23,8 +24,8 @@ public class MyUI extends FlexLayout implements RouterLayout {
         setClassName("main-layout");
 
         menu = new Menu();
-        menu.addView(TeacherView.class, TeacherView.VIEW_NAME);
-        menu.addView(StudentView.class, StudentView.VIEW_NAME);
+        menu.addView(TeacherView.class, TeacherView.VIEW_NAME, VaadinIcon.ACADEMY_CAP.create());
+        menu.addView(StudentView.class, StudentView.VIEW_NAME, VaadinIcon.EDIT.create());
         add(menu);
     }
 
