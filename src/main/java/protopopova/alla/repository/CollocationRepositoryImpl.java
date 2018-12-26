@@ -1,5 +1,6 @@
 package protopopova.alla.repository;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import protopopova.alla.model.Collocation;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SpringComponent
 public class CollocationRepositoryImpl implements CollocationRepository {
 
     private Map<Integer, Collocation> repository = new ConcurrentHashMap<>();

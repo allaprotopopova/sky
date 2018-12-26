@@ -14,7 +14,7 @@
 	</prerequisites>
 
 	<properties>
-		<vaadin.version>11.0.2</vaadin.version>
+		<vaadin.version>12.0.3</vaadin.version>
 		<jetty.plugin.version>9.4.11.v20180605</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8
@@ -22,16 +22,11 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
+		<spring.version>5.1.2.RELEASE</spring.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>3.1.0</version>
-				<scope>provided</scope>
-			</dependency>
 			<dependency>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-bom</artifactId>
@@ -39,33 +34,27 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 <dependencies>
-    <!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-button-flow -->
-    <dependency>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-button-flow</artifactId>
-        <version>1.2.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-list-box-flow -->
-    <dependency>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-list-box-flow</artifactId>
-        <version>1.2.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.vaadin.pekka/checkbox-group-java -->
-    <dependency>
-        <groupId>org.vaadin.pekka</groupId>
-        <artifactId>checkbox-group-java</artifactId>
-        <version>1.0.0.beta1</version>
-    </dependency>
-
-    <dependency>
-		<groupId>javax.validation</groupId>
-		<artifactId>validation-api</artifactId>
-		<version>2.0.1.Final</version>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+		<scope>provided</scope>
 	</dependency>
+	<dependency>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-spring-boot-starter</artifactId>
+	</dependency>
+
 	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-simple</artifactId>
@@ -81,11 +70,10 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.plugin.version}</version>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<scanIntervalSeconds>2</scanIntervalSeconds>
+					<addResources>true</addResources>
 				</configuration>
 			</plugin>
 		</plugins>
