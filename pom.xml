@@ -28,6 +28,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <postgresql.version>42.2.5</postgresql.version>
         <tomcat.version>9.0.14</tomcat.version>
+        <junit.jupiter.version>5.3.1</junit.jupiter.version>
 
     </properties>
 
@@ -93,6 +94,18 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!--Test-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <repositories>

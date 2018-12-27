@@ -1,34 +1,44 @@
 package protopopova.alla.model;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "collocations")
-public class Collocation {
+@Table(name = "collocations", uniqueConstraints = {@UniqueConstraint(columnNames = {"mainword", "pairword"}, name = "collocations_unique_mainword_pairword_idx")})
+public class Collocation extends AbstractBaseEntity {
 
-    @Id
-    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = 100000)
-    Integer id;
-    String mainWord;
-    String pairWord;
+    @Column(name = "mainword", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 140)
+    private String mainWord;
+
+    @Column(name = "pairword", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 140)
+    private String pairWord;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private WordsGroup wordsGroup;
+
 
     public Collocation() {
     }
 
     public Collocation(Integer id, String mainWord, String pairWord) {
-        this.id = id;
+        super(id);
         this.mainWord = mainWord;
         this.pairWord = pairWord;
     }
 
     public Collocation(String mainWord, String pairWord) {
-        this.mainWord = mainWord;
-        this.pairWord = pairWord;
+        this(null, mainWord, pairWord);
     }
 
     public Integer getId() {
@@ -53,6 +63,12 @@ public class Collocation {
 
     public void setPairWord(String pairWord) {
         this.pairWord = pairWord;
+    }
+
+    public WordsGroup getWordsGroup() { return wordsGroup; }
+
+    public void setWordsGroup(WordsGroup wordsGroup) {
+        this.wordsGroup = wordsGroup;
     }
 
     public boolean isNew() {

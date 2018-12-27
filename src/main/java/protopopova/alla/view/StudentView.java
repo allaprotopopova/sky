@@ -7,10 +7,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import protopopova.alla.MyUI;
 import protopopova.alla.model.Collocation;
-import protopopova.alla.repository.CollocationRepository;
 import protopopova.alla.service.CollocationService;
 
 import java.util.*;

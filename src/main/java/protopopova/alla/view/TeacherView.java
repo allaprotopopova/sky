@@ -29,7 +29,7 @@ public class TeacherView extends VerticalLayout {
         this.service =serv;
         List<Collocation> all = service.getAll();
         Grid<Collocation> grid = new Grid<>();
-        grid.setItems(service.getAll());
+        grid.setItems(all);
         grid.addColumn(Collocation::getMainWord).setHeader("Word");
         grid.addColumn(Collocation::getPairWord).setHeader("Translate");
 

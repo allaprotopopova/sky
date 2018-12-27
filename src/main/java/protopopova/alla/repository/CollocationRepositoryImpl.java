@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import protopopova.alla.model.Collocation;
 
 import java.util.List;
@@ -12,32 +13,31 @@ import java.util.List;
 @Repository
 public class CollocationRepositoryImpl implements CollocationRepository {
 
-    private JdbcTemplate jdbcTemplate;
-    private static final RowMapper<Collocation> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Collocation.class);
+    private CRUDCollocationRepository crudRepository;
 
     @Autowired
-    public CollocationRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate=jdbcTemplate;
+    public CollocationRepositoryImpl(CRUDCollocationRepository crudRepository) {
+        this.crudRepository=crudRepository;
     }
 
     @Override
     public Collocation save(Collocation collocation) {
-        return null;
+        return crudRepository.save(collocation);
     }
 
     @Override
     public boolean delete(int id) {
-        return false;
+        return crudRepository.delete(id)!=0;
     }
 
     @Override
     public Collocation get(int id) {
-        return null;
+        return crudRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<Collocation> getAll() {
-        List<Collocation> col = jdbcTemplate.query("Select * from collocations", ROW_MAPPER);
+        List<Collocation> col = crudRepository.findAll();;
         return col;
     }
 }
