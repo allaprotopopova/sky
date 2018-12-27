@@ -1,6 +1,13 @@
 package protopopova.alla.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "collocations")
 public class Collocation {
+
+    @Id
+    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = 100000)
     Integer id;
     String mainWord;
     String pairWord;
@@ -41,7 +48,7 @@ public class Collocation {
     }
 
     public boolean isNew() {
-        return id==null;
+        return id == null;
     }
 
     @Override

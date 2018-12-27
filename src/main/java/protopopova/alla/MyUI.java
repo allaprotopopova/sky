@@ -16,24 +16,22 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import protopopova.alla.view.StudentView;
 import protopopova.alla.view.TeacherView;
 
-@Push
-@SpringComponent
+@Route
 @StyleSheet("css/shared-styles.css")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
-public class MyUI extends UI implements RouterLayout {
+public class MyUI extends FlexLayout implements RouterLayout {
 
     private Menu menu;
 
     public MyUI() {
-        FlexLayout flex = new FlexLayout();
-        flex.setSizeFull();
-        flex.setClassName("main-layout");
+       setSizeFull();
+       setClassName("main-layout");
 
         menu = new Menu();
         menu.addView(TeacherView.class, TeacherView.VIEW_NAME, VaadinIcon.ACADEMY_CAP.create());
         menu.addView(StudentView.class, StudentView.VIEW_NAME, VaadinIcon.EDIT.create());
-        flex.add(menu);
-        add(flex);
+       add(menu);
+
     }
 
 }
