@@ -1,6 +1,11 @@
 package protopopova.alla.model;
 
-import javax.persistence.*;
+
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "collocations")
@@ -11,6 +16,9 @@ public class Collocation {
     Integer id;
     String mainWord;
     String pairWord;
+
+    public Collocation() {
+    }
 
     public Collocation(Integer id, String mainWord, String pairWord) {
         this.id = id;
