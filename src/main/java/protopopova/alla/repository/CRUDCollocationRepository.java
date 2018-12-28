@@ -19,6 +19,11 @@ public interface CRUDCollocationRepository extends JpaRepository<Collocation, In
     @Query("DELETE FROM Collocation u WHERE u.id=:id")
     int delete(@Param("id") int id);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Collocation u WHERE u.wordGroup.id=:groupId")
+    int deleteByGroupId(@Param("groupId") int groupId);
+
     @Override
     Collocation save(Collocation collocation);
 

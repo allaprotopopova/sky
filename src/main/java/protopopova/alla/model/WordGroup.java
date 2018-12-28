@@ -25,6 +25,11 @@ public class WordGroup extends AbstractBaseEntity {
     public WordGroup() {
     }
 
+    public WordGroup(Integer id, String name) {
+        super(id);
+        this.name = name;
+    }
+
     public WordGroup(String name) {
         this(null, name, null);
     }

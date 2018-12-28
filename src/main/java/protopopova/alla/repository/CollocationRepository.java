@@ -11,6 +11,8 @@ public interface CollocationRepository {
 
     boolean delete(int id);
 
+    boolean deleteByGroupId(int id);
+
     Collocation get(int id);
 
     List<Collocation> getAll(int groupId);

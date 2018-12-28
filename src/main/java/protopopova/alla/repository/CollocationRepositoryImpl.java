@@ -46,6 +46,11 @@ public class CollocationRepositoryImpl implements CollocationRepository {
     }
 
     @Override
+    public boolean deleteByGroupId(int groupId) {
+        return crudRepository.deleteByGroupId(groupId)!=0;
+    }
+
+    @Override
     @Transactional
     public Collocation get(int id) {
         return crudRepository.findById(id).orElse(null);

@@ -2,8 +2,10 @@ package protopopova.alla.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import protopopova.alla.model.WordGroup;
+import protopopova.alla.repository.CollocationRepository;
 import protopopova.alla.repository.WordGroupRepository;
 import protopopova.alla.util.exception.NotFoundException;
 
@@ -16,10 +18,12 @@ import static protopopova.alla.util.ValidationUtil.checkNotFoundWithId;
 public class WordGroupServiceImpl implements WordGroupService {
 
     private WordGroupRepository repository;
+    private CollocationRepository collocationRepository;
 
     @Autowired
-    public WordGroupServiceImpl(WordGroupRepository repository) {
+    public WordGroupServiceImpl(WordGroupRepository repository, CollocationRepository collocationRepository) {
         this.repository = repository;
+        this.collocationRepository = collocationRepository;
     }
 
     @Override
@@ -34,7 +38,9 @@ public class WordGroupServiceImpl implements WordGroupService {
     }
 
     @Override
+    @Transactional
     public void delete(int id) throws NotFoundException {
+        collocationRepository.deleteByGroupId(id);
         checkNotFoundWithId(repository.delete(id), id);
     }
 
