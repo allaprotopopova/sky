@@ -21,6 +21,8 @@ public class StudentView extends HorizontalLayout {
 
     public static final String VIEW_NAME = "Student";
 
+    private int groupId = 1;
+
     private CollocationService service;
     private Button leftChecked;
     private Button rightChecked;
@@ -31,7 +33,7 @@ public class StudentView extends HorizontalLayout {
     public StudentView(CollocationService serv) {
         this.service =serv;
 
-        List<Collocation> allCollocations = service.getAll();
+        List<Collocation> allCollocations = service.getAll(groupId);
 
         Collections.shuffle(allCollocations);
         List<Collocation> lList = new ArrayList<>(allCollocations);

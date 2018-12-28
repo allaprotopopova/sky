@@ -10,49 +10,58 @@ import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 import protopopova.alla.MyUI;
 import protopopova.alla.model.Collocation;
+import protopopova.alla.model.WordGroup;
 import protopopova.alla.repository.CollocationRepository;
 import protopopova.alla.service.CollocationService;
+import protopopova.alla.service.WordGroupService;
+import protopopova.alla.view.widgets.CollocationsListForm;
 
 import java.util.List;
 
 
 @Route(value = "teacher", layout = MyUI.class)
 @RouteAlias(value = "", layout = MyUI.class)
-public class TeacherView extends VerticalLayout {
+public class TeacherView extends HorizontalLayout {
 
-    CollocationService service;
+    WordGroupService service;
+    CollocationService collocationService;
 
     public static final String VIEW_NAME = "Teacher";
 
     @Autowired
-    public TeacherView(CollocationService serv) {
+    public TeacherView(WordGroupService serv, CollocationService collocationServ) {
         this.service =serv;
-        List<Collocation> all = service.getAll();
-        Grid<Collocation> grid = new Grid<>();
+        this.collocationService=collocationServ;
+        List<WordGroup> all = service.getAll();
+        Grid<WordGroup> grid = new Grid<>();
         grid.setItems(all);
-        grid.addColumn(Collocation::getMainWord).setHeader("Word");
-        grid.addColumn(Collocation::getPairWord).setHeader("Translate");
+        grid.addColumn(WordGroup::getName).setHeader("Name of the List");
 
-
+        VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalLayout editForm = new HorizontalLayout();
-        TextField mainWord = new TextField();
-        TextField pairWord = new TextField();
+        TextField nameGroup = new TextField();
 
-        editForm.add(mainWord);
-        editForm.add(pairWord);
+        editForm.add(nameGroup);
 
         Button saveBtn = new Button("Save");
         saveBtn.addClickListener(click -> {
-            if (mainWord.getValue()!="" && pairWord.getValue()!="") {
-                service.save(new Collocation(mainWord.getValue(), pairWord.getValue()));
+            if (!nameGroup.getValue().isEmpty()) {
+                service.create(new WordGroup(nameGroup.getValue()));
                 grid.setItems(service.getAll());
                 grid.getDataProvider().refreshAll();
             }
         });
         editForm.add(saveBtn);
+        verticalLayout.add(editForm);
+        verticalLayout.add(grid);
 
-        add(editForm);
-        add(grid);
+        CollocationsListForm form = new CollocationsListForm(collocationService);
+
+        add(verticalLayout);
+        add(form);
+        grid.asSingleSelect().addValueChangeListener(event -> {
+            form.setCurrentWordGroup(event.getValue().getId());
+        });
 
     }
 }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import protopopova.alla.Application;
 import protopopova.alla.model.Collocation;
 import protopopova.alla.repository.CollocationRepository;
@@ -24,9 +25,15 @@ public class CollocationServiceImpl implements protopopova.alla.service.Collocat
     }
 
     @Override
-    public Collocation save(Collocation collocation) {
-        log.debug("save {}", collocation);
-        return repository.save(collocation);
+    public Collocation save(Collocation collocation, int groupId) {
+        log.debug("save {} with wordGroupId={}", collocation, groupId);
+        return repository.save(collocation, groupId);
+    }
+
+    @Override
+    @Transactional
+    public List<Collocation> save(List<Collocation> collocation, int groupId) {
+        return repository.save(collocation, groupId);
     }
 
     @Override
@@ -42,8 +49,8 @@ public class CollocationServiceImpl implements protopopova.alla.service.Collocat
     }
 
     @Override
-    public List<Collocation> getAll() {
-        log.debug("getAll()");
-        return repository.getAll();
+    public List<Collocation> getAll(int groupId) {
+        log.debug("getAll() with groupId={}", groupId);
+        return repository.getAll(groupId);
     }
 }

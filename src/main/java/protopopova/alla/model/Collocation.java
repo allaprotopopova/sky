@@ -25,7 +25,7 @@ public class Collocation extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private WordsGroup wordsGroup;
+    private WordGroup wordGroup;
 
 
     public Collocation() {
@@ -65,10 +65,10 @@ public class Collocation extends AbstractBaseEntity {
         this.pairWord = pairWord;
     }
 
-    public WordsGroup getWordsGroup() { return wordsGroup; }
+    public WordGroup getWordGroup() { return wordGroup; }
 
-    public void setWordsGroup(WordsGroup wordsGroup) {
-        this.wordsGroup = wordsGroup;
+    public void setWordGroup(WordGroup wordGroup) {
+        this.wordGroup = wordGroup;
     }
 
     public boolean isNew() {
@@ -78,9 +78,9 @@ public class Collocation extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Collocation{" +
-                "id=" + id +
-                ", mainWord='" + mainWord + '\'' +
+                "mainWord='" + mainWord + '\'' +
                 ", pairWord='" + pairWord + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

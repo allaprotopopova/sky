@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import protopopova.alla.model.Collocation;
+import protopopova.alla.model.WordGroup;
 
 import java.util.List;
 
@@ -14,15 +15,29 @@ import java.util.List;
 public class CollocationRepositoryImpl implements CollocationRepository {
 
     private CRUDCollocationRepository crudRepository;
+    private CRUDWordGroupRepository crudWordGroupRepository;
 
     @Autowired
-    public CollocationRepositoryImpl(CRUDCollocationRepository crudRepository) {
+    public CollocationRepositoryImpl(CRUDCollocationRepository crudRepository, CRUDWordGroupRepository crudWordGroupRepository) {
         this.crudRepository=crudRepository;
+        this.crudWordGroupRepository=crudWordGroupRepository;
     }
 
     @Override
-    public Collocation save(Collocation collocation) {
+    @Transactional
+    public Collocation save(Collocation collocation, int groupId) {
+        WordGroup w = crudWordGroupRepository.getOne(groupId);
+        collocation.setWordGroup(w);
         return crudRepository.save(collocation);
+    }
+
+    @Override
+    @Transactional
+    public List<Collocation> save(List<Collocation> collocation, int groupId) {
+        collocation.forEach(item-> {
+           save(item, groupId);
+        });
+        return crudRepository.getAll(groupId);
     }
 
     @Override
@@ -31,13 +46,14 @@ public class CollocationRepositoryImpl implements CollocationRepository {
     }
 
     @Override
+    @Transactional
     public Collocation get(int id) {
         return crudRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Collocation> getAll() {
-        List<Collocation> col = crudRepository.findAll();;
-        return col;
+    @Transactional
+    public List<Collocation> getAll(int groupId) {
+        return crudRepository.getAll(groupId);
     }
 }
