@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class CollocationsListForm extends Div {
 
         HorizontalLayout editForm = new HorizontalLayout();
         TextField mainWord = new com.vaadin.flow.component.textfield.TextField();
-        TextField pairWord = new TextField();
+        TextArea pairWord = new TextArea();
 
         editForm.add(mainWord);
         editForm.add(pairWord);
@@ -53,7 +54,12 @@ public class CollocationsListForm extends Div {
 
         grid = new Grid<>();
         grid.addColumn(Collocation::getMainWord).setHeader("word");
-        grid.addColumn(Collocation::getPairWord).setHeader("translate");
+//        grid.addColumn(Collocation::getPairWord).setHeader("translate");
+        grid.addColumn(new ComponentRenderer<>(col-> {
+            TextArea translate = new TextArea();
+            translate.setValue(col.getPairWord());
+            return translate;
+        })).setHeader("translate");
 
         grid.addColumn(new ComponentRenderer<Button, Collocation>(col -> {
             Button button = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
@@ -74,7 +80,7 @@ public class CollocationsListForm extends Div {
                 Dialog editGroupDialog = new Dialog();
                 TextField mWord =  new TextField("New word");
                 mWord.setValue(col.getMainWord());
-                TextField pWord =  new TextField("New translate");
+                TextArea pWord =  new TextArea("New translate");
                 pWord.setValue(col.getPairWord());
                 editGroupDialog.add(mWord);
                 editGroupDialog.add(pWord);

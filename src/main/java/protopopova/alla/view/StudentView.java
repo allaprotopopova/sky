@@ -2,6 +2,7 @@ package protopopova.alla.view;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -11,7 +12,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import protopopova.alla.MyUI;
 import protopopova.alla.model.Collocation;
+import protopopova.alla.model.WordGroup;
 import protopopova.alla.service.CollocationService;
+import protopopova.alla.service.WordGroupService;
 
 import java.util.*;
 import java.util.List;
@@ -21,26 +24,28 @@ public class StudentView extends HorizontalLayout {
 
     public static final String VIEW_NAME = "Student";
 
-    private int groupId = 1;
+    private int groupId;
 
     private CollocationService service;
+    private WordGroupService groupService;
     private Button leftChecked;
     private Button rightChecked;
-    private Set<Collocation> acceptedSet = new LinkedHashSet<>();
-//    private Map<Collocation, Button> leftMap = new LinkedHashMap<>();/
+    private Set<Collocation> acceptedSet;
+    private List<Collocation> allCollocations;
+    private List<Collocation> lList;
+    private List<Collocation> rList;
+    private final ListBox<Collocation> leftList;
+    private final ListBox<Collocation> rightList;
+    //    private Map<Collocation, Button> leftMap = new LinkedHashMap<>();/
 
     @Autowired
-    public StudentView(CollocationService serv) {
+    public StudentView(CollocationService serv, WordGroupService groupService) {
         this.service =serv;
+        this.groupService=groupService;
+        setSizeFull();
 
-        List<Collocation> allCollocations = service.getAll(groupId);
-
-        Collections.shuffle(allCollocations);
-        List<Collocation> lList = new ArrayList<>(allCollocations);
-        ListBox<Collocation> leftList = new ListBox<>();
-        Collections.shuffle(allCollocations);
-        List<Collocation> rList = new ArrayList<>(allCollocations);
-        ListBox<Collocation> rightList = new ListBox<>();
+        leftList = new ListBox<>();
+        rightList = new ListBox<>();
 
         leftList.setRenderer(new ComponentRenderer<>(coll -> {
             Button left = new Button(coll.getMainWord());
@@ -54,8 +59,6 @@ public class StudentView extends HorizontalLayout {
             );
             return left;
         }));
-        leftList.setDataProvider(new ListDataProvider<Collocation>(lList));
-
 
         rightList.setRenderer(new ComponentRenderer<>(coll -> {
             Button right = new Button(coll.getPairWord());
@@ -69,11 +72,24 @@ public class StudentView extends HorizontalLayout {
             });
             return right;
         }));
-        rightList.setItems(rList);
-
 
         add(leftList);
         add(rightList);
+
+        Grid<WordGroup> groupsGrid = new Grid<>();
+        groupsGrid.addColumn(WordGroup::getName).setHeader("Name of set");
+        groupsGrid.asSingleSelect().addValueChangeListener(event-> {
+            if (event.getValue()!=null) {
+                setGroupId(event.getValue().getId());
+            }
+           else {
+                leftList.setItems(new ArrayList<>());
+                rightList.setItems(new ArrayList<>());
+            }
+        });
+
+        groupsGrid.setItems(groupService.getAll());
+        add(groupsGrid);
 
 
     }
@@ -118,4 +134,16 @@ public class StudentView extends HorizontalLayout {
         return false;
     }
 
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+        doNullForFields(true);
+        acceptedSet = new LinkedHashSet<>();
+        allCollocations = service.getAll(groupId);
+        Collections.shuffle(allCollocations);
+        lList = new ArrayList<>(allCollocations);
+        Collections.shuffle(allCollocations);
+        rList = new ArrayList<>(allCollocations);
+        leftList.setItems(lList);
+        rightList.setItems(rList);
+    }
 }

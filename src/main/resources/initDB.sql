@@ -1,8 +1,9 @@
 DROP TABLE IF EXISTS collocations;
 DROP TABLE IF EXISTS words_groups;
-DROP SEQUENCE IF EXISTS global_seq_cliff ;
+DROP SEQUENCE IF EXISTS global_seq_cliff;
 
 CREATE SEQUENCE GLOBAL_SEQ_CLIFF START 100000;
+
 CREATE TABLE words_groups
 (
   id               INTEGER PRIMARY KEY DEFAULT nextval('global_seq_cliff'),
