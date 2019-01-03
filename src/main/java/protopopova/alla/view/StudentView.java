@@ -3,33 +3,34 @@ package protopopova.alla.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextAreaVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.server.ClassResource;
-import org.apache.catalina.webresources.FileResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import protopopova.alla.MyUI;
 import protopopova.alla.model.Collocation;
 import protopopova.alla.model.WordGroup;
 import protopopova.alla.service.CollocationService;
 import protopopova.alla.service.WordGroupService;
+import protopopova.alla.util.FailPhrase;
+import protopopova.alla.util.SuccessPhrase;
 
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Route(value = "student", layout = MyUI.class)
 @RouteAlias(value = "", layout = MyUI.class)
 public class StudentView extends HorizontalLayout {
 
     public static final String VIEW_NAME = "Student";
+    public static final String GREETING = "Hi there! Let's start! Just pick out set!";
 
     private int groupId;
 
@@ -43,7 +44,8 @@ public class StudentView extends HorizontalLayout {
     private List<Collocation> rList;
     private final ListBox<Collocation> leftList;
     private final ListBox<Collocation> rightList;
-    //    private Map<Collocation, Button> leftMap = new LinkedHashMap<>();/
+    private final TextArea cliffSays;
+
 
     @Autowired
     public StudentView(CollocationService serv, WordGroupService groupServ) {
@@ -61,7 +63,9 @@ public class StudentView extends HorizontalLayout {
                             leftChecked.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_ERROR);
                         }
                         leftChecked = left;
-                        doNullForFields(addClickLogic(lList, leftList, rList, rightList, left, rightChecked));
+                        boolean isSuccess = addClickLogic(lList, leftList, rList, rightList, left, rightChecked);
+                        cliffSays(isSuccess);
+                        doNullForFields(isSuccess);
                     }
             );
             return left;
@@ -74,7 +78,9 @@ public class StudentView extends HorizontalLayout {
                     rightChecked.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_ERROR);
                 }
                 rightChecked = right;
-                doNullForFields(addClickLogic(rList, rightList, lList, leftList, right, leftChecked));
+                boolean isSuccess = addClickLogic(rList, rightList, lList, leftList, right, leftChecked);
+                cliffSays(isSuccess);
+                doNullForFields(isSuccess);
 
             });
             return right;
@@ -99,8 +105,16 @@ public class StudentView extends HorizontalLayout {
         div.setWidth("70%");
 
 // Show the image in the application
-
-        div.add(new Image("table-logo.png", ""));
+        cliffSays = new TextArea();
+        cliffSays.setValue(GREETING);
+        cliffSays.setWidth("100%%");
+        cliffSays.addThemeVariants(TextAreaVariant.LUMO_ALIGN_CENTER);
+        cliffSays.setEnabled(false);
+        Image cliffphoto = new Image("frontend/img/cliff-photo.jpg", "cliff-photo.jpg");
+        HorizontalLayout cliffTalki = new HorizontalLayout();
+        cliffTalki.add(cliffphoto);
+        cliffTalki.add(cliffSays);
+        div.add(cliffTalki);
         HorizontalLayout hor = new HorizontalLayout();
         hor.setSizeFull();
         div.add(hor);
@@ -109,6 +123,30 @@ public class StudentView extends HorizontalLayout {
         groupsGrid.setWidth("30%");
         add(div);
         add(groupsGrid);
+
+
+    }
+
+    private void cliffSays(boolean isSuccess) {
+
+        if (leftChecked!=null && rightChecked!=null) {
+            int lower = 0;
+            int upper = 0;
+            if (isSuccess) {
+                upper = SuccessPhrase.values().length;
+            } else {
+                upper = FailPhrase.values().length;
+            }
+
+            int randomIndex = (int) (Math.random() * (upper - lower)) + lower;
+
+            if (isSuccess) {
+                cliffSays.setValue(SuccessPhrase.values()[randomIndex].getText());
+
+            } else {
+                cliffSays.setValue(FailPhrase.values()[randomIndex].getText());
+            }
+        }
 
 
     }
