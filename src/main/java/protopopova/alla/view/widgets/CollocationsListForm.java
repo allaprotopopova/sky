@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextAreaVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import protopopova.alla.model.Collocation;
 import protopopova.alla.model.WordGroup;
 import protopopova.alla.service.CollocationService;
 
+import javax.persistence.Column;
 import java.util.Collections;
 
 
@@ -37,13 +40,14 @@ public class CollocationsListForm extends Div {
     public CollocationsListForm(CollocationService collService) {
        this.collocationService = collService;
         content = new VerticalLayout();
-        content.setSizeUndefined();
+        content.setSizeFull();
         add(content);
 
         HorizontalLayout editForm = new HorizontalLayout();
-        TextField mainWord = new com.vaadin.flow.component.textfield.TextField();
+        TextArea mainWord = new TextArea();
         TextArea pairWord = new TextArea();
 
+        editForm.setWidth("100%");
         editForm.add(mainWord);
         editForm.add(pairWord);
 
@@ -53,15 +57,17 @@ public class CollocationsListForm extends Div {
         content.add(editForm);
 
         grid = new Grid<>();
-        grid.addColumn(Collocation::getMainWord).setHeader("word");
-//        grid.addColumn(Collocation::getPairWord).setHeader("translate");
-        grid.addColumn(new ComponentRenderer<>(col-> {
+        grid.setVerticalScrollingEnabled(true);
+        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        Grid.Column mainCol = grid.addColumn(Collocation::getMainWord).setHeader("word");
+        Grid.Column pairCol = grid.addColumn(new ComponentRenderer<>(col-> {
             TextArea translate = new TextArea();
+            translate.addThemeVariants(TextAreaVariant.LUMO_ALIGN_CENTER, TextAreaVariant.LUMO_SMALL);
             translate.setValue(col.getPairWord());
             return translate;
         })).setHeader("translate");
 
-        grid.addColumn(new ComponentRenderer<Button, Collocation>(col -> {
+        Grid.Column delCol = grid.addColumn(new ComponentRenderer<Button, Collocation>(col -> {
             Button button = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{
@@ -73,7 +79,7 @@ public class CollocationsListForm extends Div {
 
             return button;
         }));
-        grid.addColumn(new ComponentRenderer<Button, Collocation>(col -> {
+        Grid.Column saveCol = grid.addColumn(new ComponentRenderer<Button, Collocation>(col -> {
             Button button = new Button(new Icon(VaadinIcon.EDIT));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{
@@ -97,6 +103,11 @@ public class CollocationsListForm extends Div {
 
             return button;
         }));
+        mainCol.setWidth("35%");
+        pairCol.setWidth("35%");
+        pairCol.setFrozen(true);
+        delCol.setWidth("15%");
+        saveCol.setWidth("15%");
         content.add(grid);
         saveBtn.addClickListener(click -> {
             if (mainWord.getValue()!="" && pairWord.getValue()!="") {

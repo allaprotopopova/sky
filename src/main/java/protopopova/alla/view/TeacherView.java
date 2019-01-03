@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -31,7 +32,7 @@ import java.util.List;
 
 
 @Route(value = "teacher", layout = MyUI.class)
-@RouteAlias(value = "", layout = MyUI.class)
+
 public class TeacherView extends HorizontalLayout {
 
     WordGroupService service;
@@ -43,12 +44,17 @@ public class TeacherView extends HorizontalLayout {
     public TeacherView(WordGroupService serv, CollocationService collocationServ) {
         this.service =serv;
         this.collocationService=collocationServ;
+
+        setSizeFull();
         List<WordGroup> all = service.getAll();
         Grid<WordGroup> grid = new Grid<>();
         grid.setItems(all);
-        grid.addColumn(WordGroup::getName).setHeader("Name of the List");
+        grid.setHeightByRows(true);
+        grid.setVerticalScrollingEnabled(true);
+        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        Grid.Column nameCol = grid.addColumn(WordGroup::getName).setHeader("Name of the Set");
 
-        grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
+        Grid.Column delCol = grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
             Button button = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{
@@ -60,7 +66,8 @@ public class TeacherView extends HorizontalLayout {
 
             return button;
         }));
-        grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
+
+        Grid.Column saveCol = grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
             Button button = new Button(new Icon(VaadinIcon.EDIT));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{
@@ -81,6 +88,10 @@ public class TeacherView extends HorizontalLayout {
 
             return button;
         }));
+        nameCol.setWidth("70%");
+        delCol.setWidth("15%");
+        saveCol.setWidth("15%");
+
 
         VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalLayout editForm = new HorizontalLayout();
@@ -95,12 +106,15 @@ public class TeacherView extends HorizontalLayout {
                 grid.setItems(service.getAll());
             }
         });
+        editForm.setWidth("100%");
         editForm.add(saveBtn);
         verticalLayout.add(editForm);
         verticalLayout.add(grid);
 
         CollocationsListForm form = new CollocationsListForm(collocationService);
 
+        verticalLayout.setWidth("40%");
+        form.setWidth("60%");
         add(verticalLayout);
         add(form);
         grid.asSingleSelect().addValueChangeListener(event -> {
@@ -110,6 +124,10 @@ public class TeacherView extends HorizontalLayout {
                 form.clear();
             }
         });
+
+        if (all.size()>0) {
+            grid.select(all.get(0));
+        }
 
     }
 }

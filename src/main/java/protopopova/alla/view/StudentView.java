@@ -3,12 +3,19 @@ package protopopova.alla.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.server.ClassResource;
+import org.apache.catalina.webresources.FileResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import protopopova.alla.MyUI;
 import protopopova.alla.model.Collocation;
@@ -17,9 +24,9 @@ import protopopova.alla.service.CollocationService;
 import protopopova.alla.service.WordGroupService;
 
 import java.util.*;
-import java.util.List;
 
 @Route(value = "student", layout = MyUI.class)
+@RouteAlias(value = "", layout = MyUI.class)
 public class StudentView extends HorizontalLayout {
 
     public static final String VIEW_NAME = "Student";
@@ -39,9 +46,9 @@ public class StudentView extends HorizontalLayout {
     //    private Map<Collocation, Button> leftMap = new LinkedHashMap<>();/
 
     @Autowired
-    public StudentView(CollocationService serv, WordGroupService groupService) {
+    public StudentView(CollocationService serv, WordGroupService groupServ) {
         this.service =serv;
-        this.groupService=groupService;
+        this.groupService=groupServ;
         setSizeFull();
 
         leftList = new ListBox<>();
@@ -73,10 +80,9 @@ public class StudentView extends HorizontalLayout {
             return right;
         }));
 
-        add(leftList);
-        add(rightList);
 
         Grid<WordGroup> groupsGrid = new Grid<>();
+        groupsGrid.setSizeFull();
         groupsGrid.addColumn(WordGroup::getName).setHeader("Name of set");
         groupsGrid.asSingleSelect().addValueChangeListener(event-> {
             if (event.getValue()!=null) {
@@ -89,6 +95,19 @@ public class StudentView extends HorizontalLayout {
         });
 
         groupsGrid.setItems(groupService.getAll());
+        VerticalLayout div = new VerticalLayout();
+        div.setWidth("70%");
+
+// Show the image in the application
+
+        div.add(new Image("table-logo.png", ""));
+        HorizontalLayout hor = new HorizontalLayout();
+        hor.setSizeFull();
+        div.add(hor);
+        hor.add(leftList);
+        hor.add(rightList);
+        groupsGrid.setWidth("30%");
+        add(div);
         add(groupsGrid);
 
 
