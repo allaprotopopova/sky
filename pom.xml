@@ -29,7 +29,6 @@
         <postgresql.version>42.2.5</postgresql.version>
         <tomcat.version>9.0.14</tomcat.version>
         <junit.jupiter.version>5.3.1</junit.jupiter.version>
-        <java.version>11</java.version>
 
     </properties>
 
@@ -168,8 +167,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
