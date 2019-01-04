@@ -4,11 +4,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextAreaVariant;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -44,7 +47,7 @@ public class StudentView extends HorizontalLayout {
     private List<Collocation> rList;
     private final ListBox<Collocation> leftList;
     private final ListBox<Collocation> rightList;
-    private final TextArea cliffSays;
+    private final Label cliffSays;
 
 
     @Autowired
@@ -86,6 +89,10 @@ public class StudentView extends HorizontalLayout {
             return right;
         }));
 
+        cliffSays = new Label();
+        cliffSays.setText(GREETING);
+        cliffSays.setWidth("100%%");
+        cliffSays.setEnabled(false);
 
         Grid<WordGroup> groupsGrid = new Grid<>();
         groupsGrid.setSizeFull();
@@ -98,6 +105,9 @@ public class StudentView extends HorizontalLayout {
                 leftList.setItems(new ArrayList<>());
                 rightList.setItems(new ArrayList<>());
             }
+           cliffSays.removeClassName("Success");
+           cliffSays.removeClassName("Fail");
+           cliffSays.setText("Let's start!");
         });
 
         groupsGrid.setItems(groupService.getAll());
@@ -105,11 +115,7 @@ public class StudentView extends HorizontalLayout {
         div.setWidth("70%");
 
 // Show the image in the application
-        cliffSays = new TextArea();
-        cliffSays.setValue(GREETING);
-        cliffSays.setWidth("100%%");
-        cliffSays.addThemeVariants(TextAreaVariant.LUMO_ALIGN_CENTER);
-        cliffSays.setEnabled(false);
+
         Image cliffphoto = new Image("frontend/img/cliff-photo.jpg", "cliff-photo.jpg");
         HorizontalLayout cliffTalki = new HorizontalLayout();
         cliffTalki.add(cliffphoto);
@@ -141,10 +147,14 @@ public class StudentView extends HorizontalLayout {
             int randomIndex = (int) (Math.random() * (upper - lower)) + lower;
 
             if (isSuccess) {
-                cliffSays.setValue(SuccessPhrase.values()[randomIndex].getText());
+                cliffSays.setText(SuccessPhrase.values()[randomIndex].getText());
+                cliffSays.removeClassName("Fail");
+                cliffSays.setClassName("Success");
 
             } else {
-                cliffSays.setValue(FailPhrase.values()[randomIndex].getText());
+                cliffSays.setText(FailPhrase.values()[randomIndex].getText());
+                cliffSays.removeClassName("Success");
+                cliffSays.setClassName("Fail");
             }
         }
 

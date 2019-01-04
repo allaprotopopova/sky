@@ -87,6 +87,7 @@ public class CollocationsListForm extends Div {
                 TextField mWord =  new TextField("New word");
                 mWord.setValue(col.getMainWord());
                 TextArea pWord =  new TextArea("New translate");
+                pWord.setHeight("100%");
                 pWord.setValue(col.getPairWord());
                 editGroupDialog.add(mWord);
                 editGroupDialog.add(pWord);

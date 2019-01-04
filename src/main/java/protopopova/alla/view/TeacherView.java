@@ -54,7 +54,7 @@ public class TeacherView extends HorizontalLayout {
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         Grid.Column nameCol = grid.addColumn(WordGroup::getName).setHeader("Name of the Set");
 
-        Grid.Column delCol = grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
+        Grid.Column delCol = grid.addColumn(new ComponentRenderer<>(group -> {
             Button button = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{
@@ -67,7 +67,7 @@ public class TeacherView extends HorizontalLayout {
             return button;
         }));
 
-        Grid.Column saveCol = grid.addColumn(new ComponentRenderer<Button, WordGroup>(group -> {
+        Grid.Column saveCol = grid.addColumn(new ComponentRenderer<>(group -> {
             Button button = new Button(new Icon(VaadinIcon.EDIT));
             button.addThemeVariants(ButtonVariant.LUMO_SMALL);
             button.addClickListener(click->{

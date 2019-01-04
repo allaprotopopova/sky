@@ -118,14 +118,11 @@
 }
 
 /* Color codes for the availability statuses of the products */
-.Available {
+.Success {
     color: #2dd085;
 }
-.Coming {
-    color: #ffc66e;
-}
-.Discontinued {
-    color: #f54993;
+.Fail {
+    color: red;
 }
 
 /* Replicating the labels of official Vaadin components 
