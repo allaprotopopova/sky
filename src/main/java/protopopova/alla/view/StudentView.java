@@ -167,6 +167,27 @@ public class StudentView extends SplitLayout {
         }
     }
 
+    private String formatText(String text, int size) {
+        int len = text==null? 0 : text.length();
+        if (len>size) {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder buff = new StringBuilder();
+            String[] splitText = text.split(" ");
+            for (int i = 0; i < splitText.length; i++) {
+                buff.append(splitText[i]).append(" ");
+                if (buff.length()>size) {
+                    sb.append(buff);
+                    sb.append("<br/>");
+                    buff.setLength(0);
+                }
+            }
+            return sb.toString();
+
+        } else {
+            return text;
+        }
+    }
+
     private boolean addClickLogic(List<Collocation> clickedList, ListBox<Collocation> clickedListBox, List<Collocation> pairList, ListBox<Collocation> pairListBox, Button clickedBtn, Button pairChecked) {
         Collocation clickedCollValue = clickedListBox.getValue();
         Collocation pairCollValue = pairListBox.getValue();
