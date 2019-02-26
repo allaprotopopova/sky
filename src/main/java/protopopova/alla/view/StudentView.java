@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextAreaVariant;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Route(value = "student", layout = MyUI.class)
 @RouteAlias(value = "", layout = MyUI.class)
-public class StudentView extends HorizontalLayout {
+public class StudentView extends SplitLayout {
 
     public static final String VIEW_NAME = "Student";
     public static final String GREETING = "Hi there! Let's start! Just pick out set!";
@@ -127,10 +128,8 @@ public class StudentView extends HorizontalLayout {
         hor.add(leftList);
         hor.add(rightList);
         groupsGrid.setWidth("30%");
-        add(div);
-        add(groupsGrid);
-
-
+        addToPrimary(div);
+        addToSecondary(groupsGrid);
     }
 
     private void cliffSays(boolean isSuccess) {
