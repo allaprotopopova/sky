@@ -9,10 +9,6 @@ import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextAreaVariant;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -26,17 +22,14 @@ import protopopova.alla.util.FailPhrase;
 import protopopova.alla.util.SuccessPhrase;
 
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Route(value = "student", layout = MyUI.class)
 @RouteAlias(value = "", layout = MyUI.class)
 public class StudentView extends SplitLayout {
 
     public static final String VIEW_NAME = "Student";
-    public static final String GREETING = "Hi there! Let's start! Just pick out set!";
-
-    private int groupId;
+    private static final String GREETING = "Hi there! Let's start! Just pick out set!";
+    private static final long serialVersionUID = 55652396674791393L;
 
     private CollocationService service;
     private WordGroupService groupService;
@@ -136,7 +129,7 @@ public class StudentView extends SplitLayout {
 
         if (leftChecked!=null && rightChecked!=null) {
             int lower = 0;
-            int upper = 0;
+            int upper;
             if (isSuccess) {
                 upper = SuccessPhrase.values().length;
             } else {
@@ -167,27 +160,6 @@ public class StudentView extends SplitLayout {
         }
     }
 
-    private String formatText(String text, int size) {
-        int len = text==null? 0 : text.length();
-        if (len>size) {
-            StringBuilder sb = new StringBuilder();
-            StringBuilder buff = new StringBuilder();
-            String[] splitText = text.split(" ");
-            for (int i = 0; i < splitText.length; i++) {
-                buff.append(splitText[i]).append(" ");
-                if (buff.length()>size) {
-                    sb.append(buff);
-                    sb.append("<br/>");
-                    buff.setLength(0);
-                }
-            }
-            return sb.toString();
-
-        } else {
-            return text;
-        }
-    }
-
     private boolean addClickLogic(List<Collocation> clickedList, ListBox<Collocation> clickedListBox, List<Collocation> pairList, ListBox<Collocation> pairListBox, Button clickedBtn, Button pairChecked) {
         Collocation clickedCollValue = clickedListBox.getValue();
         Collocation pairCollValue = pairListBox.getValue();
@@ -195,7 +167,7 @@ public class StudentView extends SplitLayout {
             clickedBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         } else {
             pairChecked.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_ERROR);
-            if (clickedCollValue.getId() == pairCollValue.getId()) {
+            if (clickedCollValue.getId().equals(pairCollValue.getId())) {
                 clickedList.remove(clickedCollValue);
                 pairList.remove(clickedCollValue);
                 clickedListBox.getDataProvider().refreshAll();
@@ -222,7 +194,6 @@ public class StudentView extends SplitLayout {
     }
 
     public void setGroupId(int groupId) {
-        this.groupId = groupId;
         doNullForFields(true);
         acceptedSet = new LinkedHashSet<>();
         allCollocations = service.getAll(groupId);
